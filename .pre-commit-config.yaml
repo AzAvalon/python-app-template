@@ -1,0 +1,42 @@
+# Older prek install the ty hook with the system uv, which may be too old to
+# read its pyproject.toml. The CI runs prek 0.5.10.
+minimum_prek_version: "0.5.0"
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-yaml
+        exclude: ^chart/
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: Format yaml files using `prettier`
+        files: \.(yaml|yml)$
+        exclude: ^chart/
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.5
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: v0.0.107
+    hooks:
+      - id: ty
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.13.9
+    hooks:
+      - id: uv-lock
+  - repo: https://github.com/norwoodj/helm-docs
+    rev: v1.14.2
+    hooks:
+      - id: helm-docs-container
+        entry: jnorwood/helm-docs:v1.14.2
+  - repo: https://github.com/renovatebot/pre-commit-hooks
+    rev: 44.239.1
+    hooks:
+      - id: renovate-config-validator
