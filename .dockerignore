@@ -1,0 +1,7 @@
+# The build only needs the project files and the sources
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src/
+**/__pycache__

@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+  push:
+    branches:
+      - develop
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - "Makefile"
+      - ".github/workflows/tests.yml"
+
+# Limit to 1 concurrent run per workflow and branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    uses: AzAvalon/workflows/.github/workflows/_tests_app.yml@459f938778be2a1d56a5cf963a5bbc715bd78c23 # 0.2.0
+    permissions:
+      contents: read
+    with:
+      test-id: python-app-template
+      # Only PR and develop runs save the cache; releases and manual runs reuse it
+      skip-save-cache-github: ${{ github.event_name == 'release' || github.event_name == 'workflow_dispatch' }}
+      # The tests run in the dev base image: Python 3.14, uv, make
+      # renovate: datasource=docker depName=ghcr.io/azavalon/base
+      container-image: ghcr.io/azavalon/base:0.2.0-python3.14-debian-dev@sha256:ae11e56488aa32f0e17702c0e46cd77e08011a55e8ec4b8c3f96a81ccb5e3332
+      github-client-id: ${{ vars.CI_APP_CLIENT_ID }}
+    secrets:
+      github-private-key: ${{ secrets.CI_APP_PRIVATE_KEY }}
