@@ -156,7 +156,7 @@ wheels = [
 
 [[package]]
 name = "python-app-template"
-version = "0.0.0"
+version = "1.0.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
